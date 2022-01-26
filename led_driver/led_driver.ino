@@ -7,12 +7,13 @@
 #define NUMBER_OF_LEDS 300
 
 float brightValue = 0;
-uint8_t lightMode = 0;
+float lightMode = 0;
 float R = 0;
 float G = 0;
 float B = 0;
-float x = 0;
+float rgbVariable= 0;
 float stepValue = 1;
+Adafruit_NeoPixel myStrip = Adafruit_NeoPixel(NUMBER_OF_LEDS, ledPin);
 
 class Strip
 {
@@ -47,15 +48,11 @@ struct Loop
 Strip my_strip(32, 3, 32 );
 struct Loop strip0loop0(1, true, 3);
 
-//[GLOBAL_VARIABLES]/////////////////////////////////////// mój kod:
-
-
-
-
-
-
 
 void setup() {
+  
+  
+  myStrip.begin();
   my_strip.strip.begin();
 }
 
@@ -64,9 +61,10 @@ void loop() {
   if(brightValue > 1000) brightValue = 1000;
   brightValue = pow(2, (brightValue /100)) / 1024;
   
-  if(lightMode == 0) strips_loop();
-  if(lightMode == 1) strips_loop_rainbow();
-  if(lightMode == 2) strips_loop_white();
+  if(lightMode == 0) stripLoopRainbow();
+  if(lightMode == 1) stripLoopPulse();
+  if(lightMode == 2) stripLoopWhite();
+  myStrip.show();
 
   if(digitalRead(buttonPin) == HIGH){
     lightMode++;
@@ -75,28 +73,46 @@ void loop() {
   }
 }
 
+void stripLoopWhite(){
+  for(int i=0; i<NUMBER_OF_LEDS; i++){
+    myStrip.setPixelColor(i, brightValue * 255, brightValue * 255, brightValue * 255);
+  }
+}
 
+void stripLoopPulse(){
+  
+  change_colors();
+  stepValue = analogRead(speedPin);
+  //if(stepValue > 1001) stepValue = 1001; //looks unnecessary
+  stepValue = pow(2, ((stepValue) / 90 - 6));
+  if(stepValue > 256) stepValue = 256;
+  if(stepValue < 0.032) stepValue = 0;
+  
+  rgbVariable+= stepValue;
+  if(rgbVariable>= 768) rgbVariable= rgbVariable- 768;
 
-
-
-
-
+  
+  
+  for(int i=0; i<NUMBER_OF_LEDS; i++) {
+    myStrip.setPixelColor(i, R, G, B);
+  } 
+}
 
 void change_colors(){
   R = 0;
   G = 0;
   B = 0;
-  if(x < 256){
-    B = 255 - x;
-    R = x;
+  if(rgbVariable< 256){
+    B = 255 -rgbVariable;
+    R =rgbVariable;
   }
-  else if(x < 512){
-    R = 511 - x;
-    G = x - 256;
+  else if(rgbVariable< 512){
+    R = 511 -rgbVariable;
+    G = rgbVariable- 256;
   }
   else{
-    G = 767 - x;
-    B = x - 512;
+    G = 767 -rgbVariable;
+    B = rgbVariable- 512;
   }
   R = R * brightValue;
   G = G * brightValue;
@@ -104,29 +120,6 @@ void change_colors(){
 }
 
 
-void strips_loop_rainbow(){
-
-
-  for(int i=0; i<NUMBER_OF_LEDS; i++) my_strip.strip.setPixelColor(i, R, G, B);
-  change_colors();
-  stepValue = analogRead(speedPin);
-  if(stepValue > 1001) stepValue = 1001;
-  stepValue = pow(2, ((stepValue) / 90 - 6));
-  if(stepValue > 256) stepValue = 256;
-  if(stepValue < 0.032) stepValue = 0;
-  
-  x+= stepValue;/////////////////////// tu jest stepValue
-  if(x >= 768) x = x - 768;
-  my_strip.strip.show();  
-}
-
-void strips_loop_white(){
-
-
-  for(int i=0; i<NUMBER_OF_LEDS; i++) my_strip.strip.setPixelColor(i, brightValue * 255, brightValue * 255, brightValue * 255);
-
-  my_strip.strip.show();  
-}
 
 
 
@@ -137,9 +130,8 @@ void strips_loop_white(){
 
 
 
-void strips_loop() {
-  if(strip0_loop0() & 0x01)
-    my_strip.strip.show();
+void stripLoopRainbow() {
+  strip0_loop0();
 }
 
 uint8_t strip0_loop0() {
@@ -173,15 +165,15 @@ uint8_t strip0_loop0_eff0() {
     switch((int)((ind % 32) / 10.666666666666666)) {
       case 0: factor1 = (1.0 - ((float)(ind % 32 - 0 * 10.666666666666666) / 10.666666666666666)) * brightValue ;
               factor2 = ((float)((int)(ind - 0) % 32) / 10.666666666666666) * brightValue;
-              my_strip.strip.setPixelColor(j, 255 * factor1 , 255 * factor2, 0);
+              myStrip.setPixelColor(j, 255 * factor1 , 255 * factor2, 0);
               break;
       case 1: factor1 = (1.0 - ((float)(ind % 32 - 1 * 10.666666666666666) / 10.666666666666666)) * brightValue;
               factor2 = ((float)((int)(ind - 10.666666666666666) % 32) / 10.666666666666666) * brightValue;
-              my_strip.strip.setPixelColor(j, 0, 255 * factor1 + 0 * factor2, 0 * factor1 + 255 * factor2);
+              myStrip.setPixelColor(j, 0, 255 * factor1 + 0 * factor2, 0 * factor1 + 255 * factor2);
               break;
       case 2: factor1 = (1.0 - ((float)(ind % 32 - 2 * 10.666666666666666) / 10.666666666666666)) * brightValue;
               factor2 = (float)((float)((int)(ind - 21.333333333333332) % 32) / 10.666666666666666) * brightValue; ////////
-              my_strip.strip.setPixelColor(j, 255 * factor2, 0, 255 * factor1);
+              myStrip.setPixelColor(j, 255 * factor2, 0, 255 * factor1);
               break;
     }
   }
