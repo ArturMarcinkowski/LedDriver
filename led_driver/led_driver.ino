@@ -50,8 +50,6 @@ struct Loop strip0loop0(1, true, 3);
 
 
 void setup() {
-  
-  
   myStrip.begin();
   my_strip.strip.begin();
 }
@@ -80,18 +78,14 @@ void stripLoopWhite(){
 }
 
 void stripLoopPulse(){
-  
   change_colors();
   stepValue = analogRead(speedPin);
-  //if(stepValue > 1001) stepValue = 1001; //looks unnecessary
-  stepValue = pow(2, ((stepValue) / 90 - 6));
+  stepValue = pow(2, (stepValue / 90 - 6));
   if(stepValue > 256) stepValue = 256;
   if(stepValue < 0.032) stepValue = 0;
   
-  rgbVariable+= stepValue;
-  if(rgbVariable>= 768) rgbVariable= rgbVariable- 768;
-
-  
+  rgbVariable += stepValue;
+  if(rgbVariable >= 768) rgbVariable -= 768;
   
   for(int i=0; i<NUMBER_OF_LEDS; i++) {
     myStrip.setPixelColor(i, R, G, B);
@@ -103,16 +97,16 @@ void change_colors(){
   G = 0;
   B = 0;
   if(rgbVariable< 256){
-    B = 255 -rgbVariable;
-    R =rgbVariable;
+    B = 255 - rgbVariable;
+    R = rgbVariable;
   }
-  else if(rgbVariable< 512){
-    R = 511 -rgbVariable;
-    G = rgbVariable- 256;
+  else if(rgbVariable < 512){
+    R = 511 - rgbVariable;
+    G = rgbVariable - 256;
   }
   else{
-    G = 767 -rgbVariable;
-    B = rgbVariable- 512;
+    G = 767 - rgbVariable;
+    B = rgbVariable - 512;
   }
   R = R * brightValue;
   G = G * brightValue;
@@ -120,21 +114,7 @@ void change_colors(){
 }
 
 
-
-
-
-
-
-
-//////////////////////////////////
-
-
-
-void stripLoopRainbow() {
-  strip0_loop0();
-}
-
-uint8_t strip0_loop0() {
+void stripLoopRainbow(){
   uint8_t ret = 0x00;
   switch(strip0loop0.currentChild) {
     case 0:
