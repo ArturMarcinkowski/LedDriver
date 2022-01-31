@@ -3,18 +3,16 @@
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 
-#define speedPin 100
 #define ledPin D2
-#define buttonPin LOW
 #define NUMBER_OF_LEDS 300
-
-const char* ssid     = "HUAWEI-B315-8855";         
-const char* password = "8D1TQRHLFJ1";     
 
 ESP8266WiFiMulti wifiMulti;     // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 ESP8266WebServer server(80);    // Create a webserver object that listens for HTTP request on port 
-
 Adafruit_NeoPixel myStrip = Adafruit_NeoPixel(NUMBER_OF_LEDS, ledPin);
+
+char* ssid     = "ssid";         
+char* password = "password";  //   
+
 float brightValue = 1;
 float lightMode = 0;
 float R = 0;
@@ -23,9 +21,14 @@ float B = 0;
 float rgbVariable= 0;
 float rgbVariable2 = 0;
 float stepValue = 1;
+float rainbowSizeValue = 7;
 
 void setup() {
   myStrip.begin();
+
+  password = getWifiPassword();
+  ssid = getWifiSSID();
+  
   wifiMulti.addAP(ssid, password); 
 
   server.on("/", HTTP_GET, handleRoot);     // Call the 'handleRoot' function when a client requests URI "/"
@@ -43,12 +46,6 @@ void loop() {
   if(lightMode == 1) stripLoopPulse();
   if(lightMode == 2) stripLoopWhite();
   myStrip.show();
-
-  if(buttonPin == HIGH){
-    lightMode++;
-    if(lightMode == 3) lightMode = 0;
-    delay(1000);
-  }
 }
 
 void handleRoot() {                         // When URI / is requested, send a web page with a button to toggle the LED
@@ -62,10 +59,36 @@ void handleLED() {                          // If a POST request is made to URI 
 
 void handleLED2() {                          // If a POST request is made to URI /LED
    if(server.hasArg("brightness")){
-    brightValue = (float) server.arg("brightness").toInt() / 100;
+    brightValue = (float) server.arg("brightness").toInt() / 10;
+    brightValue = pow(2, brightValue) / 1024;
     if(brightValue > 1) brightValue = 1;
     if(brightValue < 0) brightValue = 0;
   }
+
+  if(server.hasArg("speed")){
+    stepValue = (float) server.arg("speed").toInt();
+    stepValue = pow(2, (stepValue / 9 - 6));
+    if(stepValue > 256) stepValue = 256;
+    if(stepValue < 0.032) stepValue = 0;
+  }
+
+  if(server.hasArg("size")){
+    rainbowSizeValue = (float) server.arg("size").toInt();
+    if(rainbowSizeValue > 50) rainbowSizeValue = 50;
+    if(rainbowSizeValue < 1) rainbowSizeValue = 1;
+  }
+
+  if(server.hasArg("mode")){
+    if(server.arg("mode") == "addOne"){
+      lightMode++;
+      if(lightMode == 3) lightMode = 0;
+    }else{
+      lightMode = server.arg("mode").toInt();
+      if(lightMode > 2) lightMode = 2; 
+      if(lightMode < 0) lightMode = 0; 
+    }
+  }
+  
   server.send(200, "text/plain", "gg");  
 }
 
@@ -74,13 +97,13 @@ void handleNotFound(){
 }
 
 void stripLoopRainbow(){
-  rgbVariable2 += 10;
+  rgbVariable2 += stepValue;
   if(rgbVariable2 >= 768) rgbVariable2 -= 768;
   rgbVariable = rgbVariable2;
   
   for(int i=0; i<NUMBER_OF_LEDS; i++){
     changeColors();
-    rgbVariable += 7;
+    rgbVariable += rainbowSizeValue;
      if(rgbVariable >= 768) rgbVariable -= 768;
     myStrip.setPixelColor(i, R, G, B);
    } 
@@ -88,11 +111,6 @@ void stripLoopRainbow(){
 
 void stripLoopPulse(){
   changeColors();
-  stepValue = speedPin;
-  stepValue = pow(2, (stepValue / 90 - 6));
-  if(stepValue > 256) stepValue = 256;
-  if(stepValue < 0.032) stepValue = 0;
-  
   rgbVariable += stepValue;
   if(rgbVariable >= 768) rgbVariable -= 768;
   
