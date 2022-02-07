@@ -13,20 +13,20 @@ myButton.addEventListener("click", async function () {
 
 let isIntervalInProgress = false;
 let counter = 0;
-// setInterval(async () => {
-//     if (isIntervalInProgress === false) {
-//         // isIntervalInProgress = true;
-//         await sendMessage()
-//     }
-// }, 1000);
+setInterval(async () => {
+    if (isIntervalInProgress === false) {
+        // isIntervalInProgress = true;
+        await sendMessage()
+    }
+}, 1000);
 
 async function sendMessage(){
     counter++;
     if(counter % 3 === 0)
-        await fetch(URL + "LED?brightness=" + brightRange.value, {method: "PUT"});
+        await fetch(URL + "LED?brightness=" + brightRange.value, {method: "POST"});
     else if(counter % 3 === 1)
-        await fetch(URL + "LED?speed=" + speedRange.value, {method: "PUT"});
+        await fetch(URL + "LED?speed=" + speedRange.value, {method: "POST"});
     else if(counter % 3 === 2)
-        await fetch(URL + "LED?size=" + sizeRange.value, {method: "PUT"});
+        await fetch(URL + "LED?size=" + sizeRange.value, {method: "POST"});
     isIntervalInProgress = false;
 }

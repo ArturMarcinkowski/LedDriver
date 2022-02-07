@@ -3,7 +3,7 @@ void setWifiConnection(){
   delay(10);
   Serial.println('\n');
   Serial.print("Connecting to ");
-  wifiMulti.addAP(ssid, password); 
+  WiFi.begin(ssid, password); 
   Serial.print("Connecting to ");
   Serial.print(ssid); Serial.println(" ...");
   int i = 0;
@@ -18,6 +18,7 @@ void setWifiConnection(){
 }
 
 void setBright(int bright){
+  Serial.println("changing brightness");  
   brightValue = (float) bright / 10;
     brightValue = pow(2, brightValue) / 1024;
     if(brightValue > 1) brightValue = 1;
@@ -25,6 +26,7 @@ void setBright(int bright){
 }
 
 void setSpeed(int speed){
+  Serial.println("changing speed");  
   stepValue = (float) speed;
   stepValue = pow(2, (stepValue / 9 - 6));
   if(stepValue > 256) stepValue = 256;
@@ -32,6 +34,7 @@ void setSpeed(int speed){
 }
 
 void setSize(int size){
+  Serial.println("changing size");  
   rainbowSizeValue = (float) size;
   if(rainbowSizeValue > 50) rainbowSizeValue = 50;
   if(rainbowSizeValue < 1) rainbowSizeValue = 1;
@@ -48,7 +51,8 @@ void setMode(String mode){
     }
 }
 
-void handleLED(){                         
+void handleLED(){
+  Serial.println("start request: LED...");                         
    if(server.hasArg("brightness")){
     setBright(server.arg("brightness").toInt());
   } 
@@ -58,9 +62,10 @@ void handleLED(){
   if(server.hasArg("size")){
     setSize(server.arg("size").toInt());
   }
+  Serial.println("req. LED complete");  
 }
 
-void handleLED1(){                         
+void handleLED1(){                      
    if(server.hasArg("brightness")){
     setBright(server.arg("brightness").toInt());
   } 

@@ -47,4 +47,5 @@ void loop() {
   if(lightMode == 1) stripLoopPulse();
   if(lightMode == 2) stripLoopWhite();
   myStrip.show();
+  delay(5);
 }
