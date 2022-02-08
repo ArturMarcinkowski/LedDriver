@@ -29,7 +29,7 @@ void setSpeed(int speed){
   stepValue = pow(2, (stepValue / 9 - 6));
   if(stepValue > 256) stepValue = 256;
   if(stepValue < 0.032) stepValue = 0;
-  
+  Serial.println("changing speed to: " + String(stepValue));  
 }
 
 void setSize(int size){  

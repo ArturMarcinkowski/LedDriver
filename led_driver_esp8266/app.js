@@ -1,14 +1,21 @@
-const myButton = document.getElementById("my-test-button");
+const uploadButton = document.getElementById("upload-button");
+const saveButton = document.getElementById("save-to-memory-button");
+const loadButton = document.getElementById("load-from-memory-button");
 const brightRange = document.getElementById("brightness-range");
 const speedRange = document.getElementById("speed-range");
 const sizeRange = document.getElementById("size-range");
 const URL = "http://192.168.8.105/";
 
-myButton.addEventListener("click", async function () {
-    myButton.style.height = 100 + "px";
-    // await fetch("http://192.168.8.116/LED?brightness=" +
-    // brightRange.value + "&mode=nextMode");
+uploadButton.addEventListener("click", async function () {
     await sendMessage();
+})
+
+saveButton.addEventListener("click", async function () {
+    await fetch(URL + "save-settings", {method: "GET"});
+})
+
+loadButton.addEventListener("click", async function () {
+    await fetch(URL + "load-settings", {method: "GET"});
 })
 
 let isIntervalInProgress = false;
@@ -21,12 +28,18 @@ let counter = 0;
 // }, 1000);
 
 async function sendMessage(){
-    counter++;
-    if(counter % 3 === 0)
-        await fetch(URL + "change-settings?brightness=" + brightRange.value, {method: "POST"});
-    else if(counter % 3 === 1)
-        await fetch(URL + "change-settings?speed=" + speedRange.value, {method: "POST"});
-    else if(counter % 3 === 2)
-        await fetch(URL + "change-settings?size=" + sizeRange.value, {method: "POST"});
-    isIntervalInProgress = false;
+    // counter++;
+        await fetch(URL + "change-settings?" + brightnessStr() + speedStr() + sizeStr(), {method: "POST"});
+}
+
+function brightnessStr() {
+    return "brightness=" + brightRange.value + "&";
+}
+
+function speedStr() {
+    return "speed=" + speedRange.value + "&";
+}
+
+function sizeStr() {
+    return "size=" + sizeRange.value + "&";
 }

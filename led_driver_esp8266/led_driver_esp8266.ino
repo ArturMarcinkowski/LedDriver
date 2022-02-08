@@ -7,7 +7,7 @@
 #define NUMBER_OF_LEDS 24
 #define EEPROM_SIZE 16
 
-ESP8266WebServer server(80);    // Create a webserver object that listens for HTTP request on port 
+ESP8266WebServer server(80);
 Adafruit_NeoPixel myStrip = Adafruit_NeoPixel(NUMBER_OF_LEDS, stripPin);
 
 char* ssid     = "ssid";         
@@ -27,14 +27,13 @@ float B = 0;
 void setup() {
   password = getWifiPassword();
   ssid = getWifiSSID();
-//  wifiMulti.addAP(ssid, password); 
   setWifiConnection();  
   myStrip.begin();
 
   server.on("/change-settings", HTTP_POST, changeSettings);
   server.on("/save-settings", HTTP_GET, saveSettings); 
   server.on("/load-settings", HTTP_GET, loadSettings); 
-  server.onNotFound(handleNotFound);        // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
+  server.onNotFound(handleNotFound);        
 
   server.begin();   
 }
