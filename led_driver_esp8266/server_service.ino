@@ -2,7 +2,6 @@ void setWifiConnection(){
   Serial.begin(115200);         // Start the Serial communication to send messages to the computer
   delay(10);
   Serial.println('\n');
-  Serial.print("Connecting to ");
   WiFi.begin(ssid, password); 
   Serial.print("Connecting to ");
   Serial.print(ssid); Serial.println(" ...");
@@ -18,26 +17,26 @@ void setWifiConnection(){
 }
 
 void setBright(int bright){
-  Serial.println("changing brightness");  
   brightValue = (float) bright / 10;
-    brightValue = pow(2, brightValue) / 1024;
-    if(brightValue > 1) brightValue = 1;
-    if(brightValue < 0) brightValue = 0;
+  brightValue = pow(2, brightValue) / 1024;
+  if(brightValue > 1) brightValue = 1;
+  if(brightValue < 0) brightValue = 0;
+  Serial.println("changing brightness to: " + String(brightValue));  
 }
 
 void setSpeed(int speed){
-  Serial.println("changing speed");  
   stepValue = (float) speed;
   stepValue = pow(2, (stepValue / 9 - 6));
   if(stepValue > 256) stepValue = 256;
   if(stepValue < 0.032) stepValue = 0;
+  
 }
 
-void setSize(int size){
-  Serial.println("changing size");  
+void setSize(int size){  
   rainbowSizeValue = (float) size;
   if(rainbowSizeValue > 50) rainbowSizeValue = 50;
   if(rainbowSizeValue < 1) rainbowSizeValue = 1;
+  Serial.println("changing size to: " + String(rainbowSizeValue));  
 }
 
 void setMode(String mode){
@@ -51,8 +50,8 @@ void setMode(String mode){
     }
 }
 
-void handleLED(){
-  Serial.println("start request: LED...");                         
+void changeSettings(){
+  Serial.println("changing settings...");                         
    if(server.hasArg("brightness")){
     setBright(server.arg("brightness").toInt());
   } 
@@ -62,31 +61,21 @@ void handleLED(){
   if(server.hasArg("size")){
     setSize(server.arg("size").toInt());
   }
-  Serial.println("req. LED complete");  
+  Serial.println("complete");  
 }
 
-void handleLED1(){                      
-   if(server.hasArg("brightness")){
-    setBright(server.arg("brightness").toInt());
-  } 
+void saveSettings(){
+  Serial.println("start saving data to EEPROM"); 
+  saveToMemory();
+  Serial.println("fnished saving data to EEPROM"); 
+  server.send(202, "text/plain", "done"); 
 }
 
-void handleLED2(){     
-  if(server.hasArg("speed")){
-    setSpeed(server.arg("speed").toInt());
-  }
-}
-
-void handleLED3(){ 
-  if(server.hasArg("size")){
-    setSize(server.arg("size").toInt());
-  }
-}
-
-void handleLED4(){ 
-  if(server.hasArg("mode")){
-    setMode(server.arg("mode"));
-  }
+void loadSettings(){
+  Serial.println("start loading data from EEPROM"); 
+  readFromMemory();
+  Serial.println("fnished loading data from EEPROM"); 
+  server.send(202, "text/plain", "done"); 
 }
 
 void handleNotFound(){
