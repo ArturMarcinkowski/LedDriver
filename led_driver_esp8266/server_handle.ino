@@ -17,12 +17,19 @@ void setWifiConnection(){
 }
 
 void handlePostRequests(String message){
+  message.replace(" ", "");
   String request = message.substring(0, message.indexOf('?'));
-  request.replace(" ", "");
   Serial.println(request);
   
   if(request == "change-settings"){
     changeSettings(message.substring(request.length() + 1));
+  }
+  if(request == "change-mode"){
+    changeMode(message.substring(request.length() + 1));
+  }
+  if(request == "change-rgb-balance"){
+    changeSettings(message.substring(request.length() + 1));
+    balanceColors();
   }
 }
 

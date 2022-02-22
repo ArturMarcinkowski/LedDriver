@@ -21,13 +21,40 @@ void setSize(int size){
   Serial.println("changing size to: " + String(rainbowSizeValue));  
 }
 
-void setMode(String mode){
-  if(mode == "nextMode"){
-      lightMode++;
-      if(lightMode == 3) lightMode = 0;
-    }else{
-      lightMode = mode.toInt();
-      if(lightMode > 2) lightMode = 2; 
-      if(lightMode < 0) lightMode = 0; 
+void setRed(int red){
+  colorBalance[0] = (float) red / 100;
+  Serial.println("changing red balance to: " + String(colorBalance[0]));  
+}
+void setGreen(int green){
+  colorBalance[1] = (float) green / 100;
+  Serial.println("changing green balance to: " + String(colorBalance[1])); 
+}
+void setBlue(int blue){
+  colorBalance[2] = (float) blue / 100;
+  Serial.println("changing blue balance to: " + String(colorBalance[2])); 
+}
+
+void balanceColors(){
+  float maximum = max(colorBalance[0], max(colorBalance[1], colorBalance[2]));
+  if(maximum != 1){
+    Serial.println("balancing colors by division by: " + String(maximum));
+    Serial.println("");
+    for(int i = 0; i < 3; i++){
+      colorBalance[i] = (float) colorBalance[i] / maximum;
+      Serial.print(String(colorBalance[i]) + ", ");
     }
+  }
+}
+
+void setMode(String mode){
+  Serial.println("from: " + String(lightMode));  
+  if(mode == "next"){
+    lightMode++;
+    if(lightMode == 3) lightMode = 0;
+  }else{
+    lightMode = mode.toInt();
+    if(lightMode > 2) lightMode = 2; 
+    if(lightMode < 0) lightMode = 0; 
+  }
+  Serial.println("to: " + String(lightMode) + " (" + mode + ")");  
 }

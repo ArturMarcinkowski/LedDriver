@@ -20,8 +20,26 @@ void changeSettings(String message){
     if(name == "size"){
       setSize(value.toInt());
     }
+    if(name == "R"){
+      setRed(value.toInt());
+    }
+    if(name == "G"){
+      setGreen(value.toInt());
+    }
+    if(name == "B"){
+      setBlue(value.toInt());
+    }
   }
   Serial.println("complete");  
+}
+
+void changeMode(String message){
+  Serial.println("changing mode...");  
+  String name = message.substring(0, message.indexOf('='));
+  String value = message.substring(message.indexOf('=') + 1, message.indexOf('&'));
+  if(name == "mode"){
+    setMode(value);
+  }
 }
 
 void saveSettings(){

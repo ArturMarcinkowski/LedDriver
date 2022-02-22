@@ -3,7 +3,7 @@
 #include <EEPROM.h>
 
 #define stripPin D2
-#define NUMBER_OF_LEDS 24
+#define NUMBER_OF_LEDS 300
 #define EEPROM_SIZE 16
 
 WiFiServer server(80);
@@ -16,7 +16,7 @@ int lightMode = 0;
 float brightValue = 0.04;
 float stepValue = 10;
 float rainbowSizeValue = 7;
-float colorBalance[3] = {1, 1, 1};
+float colorBalance[3] = {1, 1, 1}; //R, G, B
 float rgbVariable= 0;
 float rgbVariable2 = 0;
 float R = 0;
@@ -24,16 +24,16 @@ float G = 0;
 float B = 0;
 
 void setup() {
+  myStrip.begin();
   password = getWifiPassword();
   ssid = getWifiSSID();
   setWifiConnection();  
-  myStrip.begin();
   server.begin();   
 }
 
 void loop() {
   if(lightMode == 0) stripLoopRainbow();
-  if(lightMode == 1) stripLoopPulse();
+  if(lightMode == 1) stripLoopRainbow();
   if(lightMode == 2) stripLoopWhite();
   myStrip.show();
 

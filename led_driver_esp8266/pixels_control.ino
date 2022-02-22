@@ -43,6 +43,38 @@ void changeColors(){
     G = 767 - rgbVariable;
     B = rgbVariable - 512;
   }
+
+  R += 20;
+  G += 20;
+  B += 20;
+  R = R * colorBalance[0];
+  G = G * colorBalance[1];
+  B = B * colorBalance[2];
+//  int maximum = max(R, max(G, B));
+//  if(maximum != 0 && lightMode == 1){
+//    R = 255 * R / maximum;
+//    G = 255 * G / maximum;
+//    B = 255 * B / maximum;
+//  }
+
+
+
+//  int newR = R * colorBalance[0] + colorBalance[0] / (colorBalance[0] + colorBalance[1]) * colorBalance[2] * B + colorBalance[0] / (colorBalance[0] + colorBalance[2]) * colorBalance[1] * G;
+//  int newG = G * colorBalance[1] + colorBalance[1] / (colorBalance[1] + colorBalance[0]) * colorBalance[2] * B + colorBalance[1] / (colorBalance[1] + colorBalance[2]) * colorBalance[0] * R;
+//  int newB = B * colorBalance[2] + colorBalance[2] / (colorBalance[2] + colorBalance[0]) * colorBalance[1] * G + colorBalance[2] / (colorBalance[2] + colorBalance[1]) * colorBalance[0] * R;
+//  R = newR;
+//  G = newG;
+//  B = newB;
+  int maximum = max(R, max(G, B));
+  if(maximum != 0){
+    R = 255 * R / maximum;
+    G = 255 * G / maximum;
+    B = 255 * B / maximum;
+  }
+
+
+
+  
   R = R * brightValue;
   G = G * brightValue;
   B = B * brightValue;

@@ -1,20 +1,67 @@
-<form>
-    brightness: <br>
-    <input type="range" min="0" max="100" value="50" name="brightness" id="brightness-range">
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {background-color: powderblue;}
+        .box {display: inline-block;}
+        #RGB-box {vertical-align: top}
+        .color-form {display: inline-block;
+            margin-left: -100px; }
+        .color-input {width: 150px;
+            height: 20px;
+            margin: 0;
+            transform-origin: 75px 75px;
+            transform: rotate(-90deg); }
+        .RGB-form-box {margin-left: 100px; height: 180px}
+    </style>
+</head>
 
-<form>
-    speed: <br>
-    <input type="range" min="0" max="100" value="50" name="speed" id="speed-range">
-</form>
+<body>
+    <div>
+        <div class="box">
+            <form>
+                brightness: <br>
+                <input type="range" min="0" max="100" value="50" name="brightness" id="brightness-range">
+            </form>
 
-<form>
-    size: <br>
-    <input type="range" min="1" max="50" value="10" name="size" id="size-range">
-</form>
+            <form>
+                speed: <br>
+                <input type="range" min="0" max="100" value="50" name="speed" id="speed-range">
+            </form>
 
-<button id="upload-button">Upload Settings</button> <br><br>
-<button id="save-to-memory-button">Save to Memory</button> <br>
-<button id="load-from-memory-button">Load from memory</button>
+            <form>
+                size: <br>
+                <input type="range" min="1" max="50" value="10" name="size" id="size-range">
+            </form>
 
-<script type="text/javascript" src="app.js"></script>
+            <button id="upload-button">Upload Settings</button> <br><br>
+        </div>
+
+        <div class="box" id="RGB-box">
+            <div class="RGB-form-box" >
+                <form class="color-form" id="R-form">
+                    R: <br>
+                    <input class="color-input" type="range" min="0" max="200" value="100" name="brightness" id="R-range">
+                </form>
+
+                <form class="color-form" id="G-form">
+                    G: <br>
+                    <input class="color-input" type="range" min="0" max="200" value="100" name="speed" id="G-range">
+                </form>
+
+                <form class="color-form" id="B-form">
+                    B: <br>
+                    <input class="color-input" type="range" min="0" max="200" value="100" name="size" id="B-range">
+                </form>
+            </div>
+            <button id="RGB-reset-button">RGB Reset</button> <br>
+            <button id="RGB-upload-button">Upload RGB balance</button>
+        </div>
+    </div>
+
+    <button id="save-to-memory-button">Save to Memory</button> <br>
+    <button id="load-from-memory-button">Load from memory</button> <br>
+    <button id="change-mode-button">Change Mode</button>
+
+    <script type="text/javascript" src="app.js"></script>
+<body/>
