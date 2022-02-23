@@ -12,6 +12,7 @@ const sizeRange = document.getElementById("size-range");
 const redRange = document.getElementById("R-range");
 const greenRange = document.getElementById("G-range");
 const blueRange = document.getElementById("B-range");
+const opacityRange = document.getElementById("opacity-range");
 
 const URL = "http://192.168.8.105/";
 
@@ -22,6 +23,7 @@ let size = sizeRange.value;
 let red = redRange.value;
 let green = greenRange.value;
 let blue = blueRange.value;
+let opacity = opacityRange.value;
 
 uploadButton.addEventListener("click", async function () {
     await fetch(URL + "change-settings?" + brightnessStr() + speedStr() + sizeStr(), {method: "POST"});
@@ -41,17 +43,8 @@ rgbResetButton.addEventListener("click", async function () {
     blueRange.value = 100;
 })
 rgbUploadButton.addEventListener("click", async function () {
-    await fetch(URL + "change-rgb-balance?" + redStr() + greenStr() + blueStr(), {method: "POST"});
+    await fetch(URL + "change-rgb-balance?" + redStr() + greenStr() + blueStr() + opacityStr(), {method: "POST"});
 })
-// brightRange.addEventListener("change", async function () {
-//     await fetch(URL + "change-settings?" + brightnessStr(), {method: "POST"});
-// })
-// speedRange.addEventListener("change", async function () {
-//     await fetch(URL + "change-settings?" + speedStr(), {method: "POST"});
-// })
-// sizeRange.addEventListener("change", async function () {
-//     await fetch(URL + "change-settings?" + sizeStr(), {method: "POST"});
-// })
 
 function brightnessStr() {
     return "brightness=" + brightRange.value + "&";
@@ -71,6 +64,9 @@ function greenStr() {
 function blueStr() {
     return "B=" + blueRange.value + "&";
 }
+function opacityStr() {
+    return "opacity=" + opacityRange.value + "&";
+}
 
 setInterval(async () => {
     let str = "";
@@ -89,10 +85,11 @@ setInterval(async () => {
     if(str !== "") {
         await fetch(URL + "change-settings?" + str, {method: "POST"});
     }
-    if(red !== redRange.value || green !== greenRange.value || blue !== blueRange.value){
+    if(red !== redRange.value || green !== greenRange.value || blue !== blueRange.value || opacity !== opacityRange.value){
         red = redRange.value;
         green = greenRange.value;
         blue = blueRange.value;
-        await fetch(URL + "change-rgb-balance?" + redStr() + greenStr() + blueStr(), {method: "POST"});
+        opacity = opacityRange.value;
+        await fetch(URL + "change-rgb-balance?" + redStr() + greenStr() + blueStr() + opacityStr(), {method: "POST"});
     }
 }, 150);

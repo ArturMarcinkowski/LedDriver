@@ -29,6 +29,9 @@ void changeSettings(String message){
     if(name == "B"){
       setBlue(value.toInt());
     }
+    if(name == "opacity"){
+      setOpacity(value.toInt());
+    }
   }
   Serial.println("complete");  
 }
@@ -53,7 +56,3 @@ void loadSettings(){
   readFromMemory();
   Serial.println("fnished loading data from EEPROM");
 }
-
-//void handleNotFound(){
-//  server.send(404, "text/plain", "404: Not found"); 
-//}

@@ -22,6 +22,7 @@ float rgbVariable2 = 0;
 float R = 0;
 float G = 0;
 float B = 0;
+float opacity = 0;
 
 void setup() {
   myStrip.begin();
@@ -33,7 +34,7 @@ void setup() {
 
 void loop() {
   if(lightMode == 0) stripLoopRainbow();
-  if(lightMode == 1) stripLoopRainbow();
+  if(lightMode == 1) stripLoopPulse();
   if(lightMode == 2) stripLoopWhite();
   myStrip.show();
 

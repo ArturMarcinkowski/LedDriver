@@ -34,6 +34,11 @@ void setBlue(int blue){
   Serial.println("changing blue balance to: " + String(colorBalance[2])); 
 }
 
+void setOpacity(int newOpacity){
+  opacity = (float) newOpacity / 100;
+  Serial.println("changing opacity to: " + String(opacity)); 
+}
+
 void balanceColors(){
   float maximum = max(colorBalance[0], max(colorBalance[1], colorBalance[2]));
   if(maximum != 1){

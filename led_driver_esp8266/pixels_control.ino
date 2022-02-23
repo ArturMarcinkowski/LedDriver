@@ -22,8 +22,12 @@ void stripLoopPulse(){
 }
 
 void stripLoopWhite(){
+  R = 255 * brightValue * (colorBalance[0] * opacity + 1 - opacity ); 
+  G = 255 * brightValue * (colorBalance[1] * opacity + 1 - opacity ); 
+  B = 255 * brightValue * (colorBalance[2] * opacity + 1 - opacity ); 
+  
   for(int i=0; i<NUMBER_OF_LEDS; i++){
-    myStrip.setPixelColor(i, brightValue * 255, brightValue * 255, brightValue * 255);
+    myStrip.setPixelColor(i, R, G, B);
   }
 }
 
@@ -44,38 +48,20 @@ void changeColors(){
     B = rgbVariable - 512;
   }
 
-  R += 20;
-  G += 20;
-  B += 20;
-  R = R * colorBalance[0];
-  G = G * colorBalance[1];
-  B = B * colorBalance[2];
+  R = R * (1 - opacity) + 255 * colorBalance[0] * opacity;
+  G = G * (1 - opacity) + 255 * colorBalance[1] * opacity;
+  B = B * (1 - opacity) + 255 * colorBalance[2] * opacity; 
+
 //  int maximum = max(R, max(G, B));
-//  if(maximum != 0 && lightMode == 1){
+//  if(maximum != 0){
 //    R = 255 * R / maximum;
 //    G = 255 * G / maximum;
 //    B = 255 * B / maximum;
 //  }
-
-
-
-//  int newR = R * colorBalance[0] + colorBalance[0] / (colorBalance[0] + colorBalance[1]) * colorBalance[2] * B + colorBalance[0] / (colorBalance[0] + colorBalance[2]) * colorBalance[1] * G;
-//  int newG = G * colorBalance[1] + colorBalance[1] / (colorBalance[1] + colorBalance[0]) * colorBalance[2] * B + colorBalance[1] / (colorBalance[1] + colorBalance[2]) * colorBalance[0] * R;
-//  int newB = B * colorBalance[2] + colorBalance[2] / (colorBalance[2] + colorBalance[0]) * colorBalance[1] * G + colorBalance[2] / (colorBalance[2] + colorBalance[1]) * colorBalance[0] * R;
-//  R = newR;
-//  G = newG;
-//  B = newB;
-  int maximum = max(R, max(G, B));
-  if(maximum != 0){
-    R = 255 * R / maximum;
-    G = 255 * G / maximum;
-    B = 255 * B / maximum;
-  }
-
-
-
-  
   R = R * brightValue;
   G = G * brightValue;
   B = B * brightValue;
+  if(R > 255) R = 255;
+  if(G > 255) G = 255;
+  if(B > 255) B = 255;
 }
