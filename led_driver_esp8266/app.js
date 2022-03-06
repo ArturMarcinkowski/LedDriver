@@ -46,6 +46,18 @@ rgbUploadButton.addEventListener("click", async function () {
     await fetch(URL + "change-rgb-balance?" + redStr() + greenStr() + blueStr() + opacityStr(), {method: "POST"});
 })
 
+document.querySelectorAll('.color-input').forEach((el) => {
+    el.addEventListener('click', function () {
+        var circleColorStr = "rgb(R, G, B)";
+        var max = Math.max(redRange.value, greenRange.value, blueRange.value);
+        if(max === 0) max = 1;
+        circleColorStr = circleColorStr.replace('R', Math.round(255 * redRange.value / max));
+        circleColorStr = circleColorStr.replace('G', Math.round(255 * greenRange.value / max));
+        circleColorStr = circleColorStr.replace('B', Math.round(255 * blueRange.value / max));
+        document.getElementById('color-circle').style.fill = circleColorStr;
+    });
+});
+
 function brightnessStr() {
     return "brightness=" + brightRange.value + "&";
 }
@@ -69,6 +81,7 @@ function opacityStr() {
 }
 
 setInterval(async () => {
+    
     let str = "";
     if(brightness !== brightRange.value){
         brightness = brightRange.value;
