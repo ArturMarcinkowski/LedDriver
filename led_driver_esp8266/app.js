@@ -47,7 +47,7 @@ rgbUploadButton.addEventListener("click", async function () {
 })
 
 document.querySelectorAll('.color-input').forEach((el) => {
-    el.addEventListener('click', function () {
+    el.addEventListener('input', function () {
         var circleColorStr = "rgb(R, G, B)";
         var max = Math.max(redRange.value, greenRange.value, blueRange.value);
         if(max === 0) max = 1;
